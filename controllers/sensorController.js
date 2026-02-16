@@ -46,7 +46,6 @@ exports.updateSensorData = (req, res) => {
                 console.error("Bin update error:", err2);
                 return res.status(500).json({ error: err2.message });
               }
-
               // 4️⃣ Create alert + notification ONLY if status changed to full
               if (previousStatus !== "full" && newStatus === "full") {
 
@@ -83,8 +82,14 @@ exports.updateSensorData = (req, res) => {
                   }
                 );
               }
+              //5️⃣ Auto-assign to collector if status changed to full
+              // Phase 4 TODO: integrate real autoAssign(bin_id)
+              if (previousStatus !== "full" && newStatus === "full") {
+                console.log(" Auto-assign collector triggered for bin:", bin_id);
+  
+              }
 
-              // 5️⃣ Auto-resolve alert if emptied
+              // 6 Auto-resolve alert if emptied
               if (newStatus === "empty") {
                 db.query(
                   `UPDATE alerts 
@@ -93,6 +98,7 @@ exports.updateSensorData = (req, res) => {
                   [bin_id]
                 );
               }
+              req.app.get("io").emit("live",{ bin_id, status:newStatus });
 
               res.status(200).json({
                 message: "Sensor data updated successfully",
