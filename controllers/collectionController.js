@@ -107,14 +107,29 @@ exports.getAllCollections = (req, res) => {
 // =====================================
 exports.getMyCollections = (req, res) => {
   const collectorId = req.user.id;
+  console.log(`Fetching collections for collector ID: ${collectorId}`);
 
   db.query(
-    `SELECT * FROM collections
-     WHERE collector_id = ? AND status = 'pending'
-     ORDER BY id DESC`,
+    `SELECT 
+      c.id,
+      c.bin_id,
+      c.collector_id,
+      c.status,
+      b.location,
+      b.capacity,
+      b.current_fill,
+      b.status as bin_status
+     FROM collections c
+     LEFT JOIN bins b ON c.bin_id = b.id
+     WHERE c.collector_id = ? AND c.status = 'pending'
+     ORDER BY c.id DESC`,
     [collectorId],
     (err, results) => {
-      if (err) return res.status(500).json(err);
+      if (err) {
+        console.error("Error fetching collections:", err);
+        return res.status(500).json({ message: "Failed to fetch collections", error: err.message });
+      }
+      console.log(`Found ${results.length} pending collections for collector ${collectorId}`);
       res.json(results);
     }
   );
@@ -175,6 +190,59 @@ exports.completeCollection = (req, res) => {
           );
         }
       );
+    }
+  );
+};
+
+
+// =====================================
+// Update collection (ADMIN)
+// =====================================
+exports.updateCollection = (req, res) => {
+  const { id } = req.params;
+  const { status, bin_id, collector_id } = req.body;
+
+  if (!status && !bin_id && !collector_id) {
+    return res.status(400).json({
+      message: "At least one field (status, bin_id, collector_id) is required"
+    });
+  }
+
+  // Build dynamic update query
+  let updateFields = [];
+  let updateValues = [];
+
+  if (status) {
+    updateFields.push("status = ?");
+    updateValues.push(status);
+  }
+
+  if (bin_id) {
+    updateFields.push("bin_id = ?");
+    updateValues.push(bin_id);
+  }
+
+  if (collector_id) {
+    updateFields.push("collector_id = ?");
+    updateValues.push(collector_id);
+  }
+
+  updateValues.push(id);
+
+  db.query(
+    `UPDATE collections SET ${updateFields.join(", ")} WHERE id = ?`,
+    updateValues,
+    (err, result) => {
+      if (err) return res.status(500).json(err);
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: "Collection not found" });
+      }
+
+      res.json({
+        message: "Collection updated successfully",
+        collection: { id, status, bin_id, collector_id }
+      });
     }
   );
 };

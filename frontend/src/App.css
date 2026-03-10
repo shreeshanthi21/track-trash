@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-green: #10b981;
+  --light-green: #d1fae5;
+  --dark-green: #047857;
+  --white: #ffffff;
+  --light-gray: #f9fafb;
+  --gray: #e5e7eb;
+  --dark-gray: #374151;
+  --text-dark: #1f2937;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--light-gray);
+  color: var(--text-dark);
+}
+
+#root {
+  min-height: 100vh;
+  background-color: var(--light-gray);
+}
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}

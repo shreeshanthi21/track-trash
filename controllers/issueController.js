@@ -21,7 +21,10 @@ exports.createIssue = (req, res) => {
     "SELECT id FROM bins WHERE id = ?",
     [bin_id],
     (err, bins) => {
-      if (err) return res.status(500).json(err);
+      if (err) {
+        console.error("Error checking bin:", err);
+        return res.status(500).json({ message: "Database error checking bin" });
+      }
 
       if (bins.length === 0) {
         return res.status(404).json({
@@ -36,7 +39,10 @@ exports.createIssue = (req, res) => {
          VALUES (?, ?, ?, ?, 'open', NOW())`,
         [user_id, bin_id, issue_type, description],
         (err2, result) => {
-          if (err2) return res.status(500).json(err2);
+          if (err2) {
+            console.error("Error creating issue:", err2);
+            return res.status(500).json({ message: "Database error creating issue" });
+          }
 
           res.status(201).json({
             message: "Issue reported successfully",

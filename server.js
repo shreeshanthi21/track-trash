@@ -14,6 +14,7 @@ const collectionRoutes = require("./routes/collectionRoutes"); // Phase 2
 const issueRoutes = require("./routes/issueRoutes");        // Phase 2
 const notificationRoutes = require("./routes/notificationRoutes"); // Phase 2
 const analyticsRoutes = require("./routes/analyticsRoutes"); // Phase 2
+const userRoutes = require("./routes/userRoutes");          // User management
 
 // ⭐ Phase 3 Routes
 const predictionRoutes = require("./routes/predictionRoutes");
@@ -56,6 +57,7 @@ app.use("/api/collections", collectionRoutes);
 app.use("/api/issues", issueRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/users", userRoutes);
 
 // 🔹 Phase 3
 app.use("/api/predictions", predictionRoutes);

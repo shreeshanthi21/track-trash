@@ -8,8 +8,11 @@ const checkRole = (requiredRole) => {
       });
     }
 
+    console.log(`Role check: User role='${req.user.role}', Required='${requiredRole}'`);
+
     // If role does not match
     if (req.user.role !== requiredRole) {
+      console.log(`Role mismatch: Access denied for user role '${req.user.role}'`);
       return res.status(403).json({
         message: `${requiredRole} access only`
       });

@@ -1,0 +1,126 @@
+.navbar {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+  padding: 0;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  color: var(--white);
+  text-decoration: none;
+  font-size: 24px;
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.05);
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+  flex: 1;
+  margin: 0 30px;
+}
+
+.nav-item {
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-link {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.nav-link.admin-link {
+  background-color: rgba(255, 193, 7, 0.3);
+  border: 1px solid rgba(255, 193, 7, 0.6);
+  font-weight: 600;
+}
+
+.nav-link.admin-link:hover {
+  background-color: rgba(255, 193, 7, 0.5);
+  border-color: rgba(255, 193, 7, 1);
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  height: 60px;
+}
+
+.user-name {
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0 12px;
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-logout {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 13px;
+}
+
+.btn-logout:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .nav-menu {
+    gap: 15px;
+    flex: none;
+    margin: 0 15px;
+  }
+
+  .nav-link {
+    font-size: 12px;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .btn-logout {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
