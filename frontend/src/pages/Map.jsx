@@ -184,10 +184,13 @@ function MapPage() {
     }
   };
 
-  useEffect(() => {
-    fetchMapIssues();
-    fetchCollectors();
-  }, [userRole]);
+useEffect(() => {
+  fetchMapIssues();
+
+  if (userRole === "admin") {
+    fetchCollectors();   // ✅ only admin
+  }
+}, [userRole]);
 
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
