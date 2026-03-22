@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import TX from "../components/TranslatedText";
 import "./Login.css";
 import "./Register.css";
 
@@ -32,12 +33,10 @@ function Register() {
       setError("All fields are required.");
       return;
     }
-
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
-
     if (formData.password.length < 6) {
       setError("Password must be at least 6 characters.");
       return;
@@ -48,9 +47,7 @@ function Register() {
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
@@ -60,10 +57,7 @@ function Register() {
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
-      }
+      if (!response.ok) throw new Error(data.message || "Registration failed");
 
       setSuccess("Account created. Signing you in...");
 
@@ -85,19 +79,19 @@ function Register() {
     <div className="auth-page auth-page-register">
       <div className="auth-layout auth-layout-register">
         <section className="auth-panel auth-panel-brand">
-          <span className="auth-kicker">Create your workspace</span>
-          <h1>Set up your account and get into the platform.</h1>
+          <span className="auth-kicker"><TX>Create your workspace</TX></span>
+          <h1><TX>Set up your account and get into the platform.</TX></h1>
         </section>
 
         <section className="auth-panel auth-panel-form">
           <div className="auth-form-shell">
-            <span className="auth-eyebrow">Join Track Trash</span>
-            <h2>Create your account</h2>
-            <p>Choose your role, fill in your details, and continue to login.</p>
+            <span className="auth-eyebrow"><TX>Join Track Trash</TX></span>
+            <h2><TX>Create your account</TX></h2>
+            <p><TX>Choose your role, fill in your details, and continue to login.</TX></p>
 
             <form onSubmit={handleSubmit} className="auth-form auth-form-register">
               <div className="form-group">
-                <label htmlFor="name">Full name</label>
+                <label htmlFor="name"><TX>Full name</TX></label>
                 <input
                   type="text"
                   id="name"
@@ -111,7 +105,7 @@ function Register() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="email">Email address</label>
+                <label htmlFor="email"><TX>Email address</TX></label>
                 <input
                   type="email"
                   id="email"
@@ -127,7 +121,7 @@ function Register() {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="password">Password</label>
+                  <label htmlFor="password"><TX>Password</TX></label>
                   <input
                     type="password"
                     id="password"
@@ -142,7 +136,7 @@ function Register() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="confirmPassword">Confirm password</label>
+                  <label htmlFor="confirmPassword"><TX>Confirm password</TX></label>
                   <input
                     type="password"
                     id="confirmPassword"
@@ -158,7 +152,7 @@ function Register() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="role">Role</label>
+                <label htmlFor="role"><TX>Role</TX></label>
                 <select
                   id="role"
                   name="role"
@@ -166,23 +160,23 @@ function Register() {
                   onChange={handleChange}
                   disabled={loading}
                 >
-                  <option value="user">User</option>
-                  <option value="collector">Collector</option>
-                  <option value="admin">Admin</option>
+                  <option value="user"><TX>User</TX></option>
+                  <option value="collector"><TX>Collector</TX></option>
+                  <option value="admin"><TX>Admin</TX></option>
                 </select>
               </div>
 
-              {error && <div className="error-message">{error}</div>}
-              {success && <div className="success-message">{success}</div>}
+              {error   && <div className="error-message"><TX>{error}</TX></div>}
+              {success && <div className="success-message"><TX>{success}</TX></div>}
 
               <button type="submit" className="btn-register" disabled={loading}>
-                {loading ? "Creating account..." : "Create account"}
+                {loading ? <TX>Creating account...</TX> : <TX>Create account</TX>}
               </button>
             </form>
 
             <div className="auth-footer">
-              <span>Already have an account?</span>
-              <Link to="/login">Sign in</Link>
+              <span><TX>Already have an account?</TX></span>
+              <Link to="/login"><TX>Sign in</TX></Link>
             </div>
           </div>
         </section>

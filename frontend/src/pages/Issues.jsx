@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import TX from "../components/TranslatedText";
 import "./Issues.css";
 
 function getIssueTone(issueType) {
   switch (issueType?.toLowerCase()) {
-    case "overflow":
-      return "high";
+    case "overflow":                              return "high";
     case "damage":
     case "mechanical":
-    case "malfunction":
-      return "medium";
-    case "other":
-      return "low";
-    default:
-      return "medium";
+    case "malfunction":                           return "medium";
+    case "other":                                 return "low";
+    default:                                      return "medium";
   }
 }
 
@@ -76,7 +73,6 @@ function Issues() {
         issue_type: formData.issue_type,
         description: formData.description.trim(),
       });
-
       setFormData({ issue_type: "", description: "", bin_id: "" });
       setShowForm(false);
       fetchIssues();
@@ -90,7 +86,9 @@ function Issues() {
     try {
       await api.put(`/issues/resolve/${id}`);
       setIssues((current) =>
-        current.map((issue) => (issue.id === id ? { ...issue, status: "resolved" } : issue))
+        current.map((issue) =>
+          issue.id === id ? { ...issue, status: "resolved" } : issue
+        )
       );
     } catch (err) {
       console.error("Failed to resolve issue", err);
@@ -98,26 +96,30 @@ function Issues() {
   };
 
   if (loading) {
-    return <div className="issues-container"><p>Loading issues...</p></div>;
+    return (
+      <div className="issues-container">
+        <p><TX>Loading issues...</TX></p>
+      </div>
+    );
   }
 
   return (
     <div className="issues-container">
       <div className="page-header">
-        <h1>Issues and reports</h1>
-        <p>Report damaged bins, overflow, and other operational problems.</p>
+        <h1><TX>Issues and reports</TX></h1>
+        <p><TX>Report damaged bins, overflow, and other operational problems.</TX></p>
       </div>
 
       {userRole !== "admin" && (
         <div className="create-issue-section">
           {!showForm ? (
             <button className="btn btn-primary" onClick={() => setShowForm(true)}>
-              Report a new issue
+              <TX>Report a new issue</TX>
             </button>
           ) : (
             <form className="issue-form" onSubmit={handleSubmitIssue}>
               <div className="form-group">
-                <label htmlFor="issue-type">Issue type</label>
+                <label htmlFor="issue-type"><TX>Issue type</TX></label>
                 <select
                   id="issue-type"
                   value={formData.issue_type}
@@ -126,17 +128,17 @@ function Issues() {
                   }
                   required
                 >
-                  <option value="">Select issue type</option>
-                  <option value="mechanical">Mechanical</option>
-                  <option value="overflow">Overflow</option>
-                  <option value="damage">Damage</option>
-                  <option value="malfunction">Malfunction</option>
-                  <option value="other">Other</option>
+                  <option value=""><TX>Select issue type</TX></option>
+                  <option value="mechanical"><TX>Mechanical</TX></option>
+                  <option value="overflow"><TX>Overflow</TX></option>
+                  <option value="damage"><TX>Damage</TX></option>
+                  <option value="malfunction"><TX>Malfunction</TX></option>
+                  <option value="other"><TX>Other</TX></option>
                 </select>
               </div>
 
               <div className="form-group">
-                <label htmlFor="issue-description">Description</label>
+                <label htmlFor="issue-description"><TX>Description</TX></label>
                 <textarea
                   id="issue-description"
                   placeholder="Describe the issue in detail"
@@ -150,7 +152,7 @@ function Issues() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="issue-bin">Bin</label>
+                <label htmlFor="issue-bin"><TX>Bin</TX></label>
                 <select
                   id="issue-bin"
                   value={formData.bin_id}
@@ -159,7 +161,7 @@ function Issues() {
                   }
                   required
                 >
-                  <option value="">Select a bin</option>
+                  <option value=""><TX>Select a bin</TX></option>
                   {bins.map((bin) => (
                     <option key={bin.id} value={bin.id}>
                       Bin #{bin.id} - {bin.location || "No location"}
@@ -168,21 +170,18 @@ function Issues() {
                 </select>
               </div>
 
-              {error && <div className="error-message">{error}</div>}
+              {error && <div className="error-message"><TX>{error}</TX></div>}
 
               <div className="form-actions">
                 <button type="submit" className="btn btn-primary">
-                  Submit issue
+                  <TX>Submit issue</TX>
                 </button>
                 <button
                   type="button"
                   className="btn btn-secondary"
-                  onClick={() => {
-                    setShowForm(false);
-                    setError("");
-                  }}
+                  onClick={() => { setShowForm(false); setError(""); }}
                 >
-                  Cancel
+                  <TX>Cancel</TX>
                 </button>
               </div>
             </form>
@@ -190,11 +189,11 @@ function Issues() {
         </div>
       )}
 
-      {error && !showForm && <p className="error">{error}</p>}
+      {error && !showForm && <p className="error"><TX>{error}</TX></p>}
 
       {issues.length === 0 ? (
         <div className="empty-state">
-          <p>No issues reported yet.</p>
+          <p><TX>No issues reported yet.</TX></p>
         </div>
       ) : (
         <div className="issues-list">
@@ -209,7 +208,7 @@ function Issues() {
                       : "🟢"}
                 </span>
                 <div className="issue-title-section">
-                  <h3>{issue.issue_type || "Issue report"}</h3>
+                  <h3><TX>{issue.issue_type || "Issue report"}</TX></h3>
                   <p className="issue-meta">
                     {issue.reporter_name && <>by {issue.reporter_name} • </>}
                     {issue.created_at
@@ -218,15 +217,15 @@ function Issues() {
                   </p>
                 </div>
                 <span className={`status-badge ${issue.status?.toLowerCase() || "open"}`}>
-                  {issue.status || "Open"}
+                  <TX>{issue.status || "Open"}</TX>
                 </span>
               </div>
 
               <div className="issue-body">
-                <p>{issue.description}</p>
+                <p><TX>{issue.description}</TX></p>
                 {issue.bin_id && (
                   <p className="issue-bin">
-                    <strong>Affected bin:</strong> #{issue.bin_id}
+                    <strong><TX>Affected bin</TX>:</strong> #{issue.bin_id}
                     {issue.bin_location ? ` • ${issue.bin_location}` : ""}
                   </p>
                 )}
@@ -234,12 +233,15 @@ function Issues() {
 
               <div className="issue-footer">
                 {userRole === "admin" && issue.status?.toLowerCase() !== "resolved" && (
-                  <button className="btn-small btn-primary" onClick={() => resolveIssue(issue.id)}>
-                    Resolve issue
+                  <button
+                    className="btn-small btn-primary"
+                    onClick={() => resolveIssue(issue.id)}
+                  >
+                    <TX>Resolve issue</TX>
                   </button>
                 )}
                 {issue.status?.toLowerCase() === "resolved" && (
-                  <span className="resolved-badge">Resolved</span>
+                  <span className="resolved-badge"><TX>Resolved</TX></span>
                 )}
               </div>
             </div>

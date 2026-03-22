@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import TX from "../components/TranslatedText";
 import "./AdminPanel.css";
 
 function AdminPanel() {
@@ -19,14 +20,12 @@ function AdminPanel() {
 
   const fetchData = async () => {
     try {
-      // Fetch collectors
       const collectorsRes = await api.get("/users/collectors");
       setCollectors(collectorsRes.data || []);
-      
-      // Fetch bins
+
       const binsRes = await api.get("/bins");
       setBins(binsRes.data || []);
-      
+
       setLoading(false);
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -51,44 +50,46 @@ function AdminPanel() {
         bin_id: parseInt(formData.bin_id)
       });
 
-      setSuccess("✅ Collection assigned successfully!");
+      setSuccess("Collection assigned successfully!");
       setFormData({ collector_id: "", bin_id: "" });
-      
-      // Reload after 2 seconds
-      setTimeout(() => {
-        setSuccess("");
-      }, 2000);
+
+      setTimeout(() => setSuccess(""), 2000);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to assign collection");
     }
   };
 
   if (loading) {
-    return <div className="admin-panel"><p>Loading...</p></div>;
+    return (
+      <div className="admin-panel">
+        <p><TX>Loading...</TX></p>
+      </div>
+    );
   }
 
   return (
     <div className="admin-panel">
       <div className="page-header">
-        <h1>⚙️ Admin Panel</h1>
-        <p>Manage system operations</p>
+        <h1>⚙️ <TX>Admin Panel</TX></h1>
+        <p><TX>Manage system operations</TX></p>
       </div>
 
       <div className="admin-section">
-        <h2>📋 Assign Collection to Collector</h2>
-        
-        {error && <div className="error-message">{error}</div>}
-        {success && <div className="success-message">{success}</div>}
+        <h2>📋 <TX>Assign Collection to Collector</TX></h2>
+
+        {error   && <div className="error-message"><TX>{error}</TX></div>}
+        {success && <div className="success-message"><TX>{success}</TX></div>}
 
         <form onSubmit={handleAssignCollection} className="assign-form">
+
           <div className="form-group">
-            <label>Collector *</label>
+            <label><TX>Collector</TX> *</label>
             <select
               value={formData.collector_id}
               onChange={(e) => setFormData({ ...formData, collector_id: e.target.value })}
               required
             >
-              <option value="">Select a collector</option>
+              <option value=""><TX>Select a collector</TX></option>
               {collectors.length > 0 ? (
                 collectors.map((collector) => (
                   <option key={collector.id} value={collector.id}>
@@ -96,19 +97,19 @@ function AdminPanel() {
                   </option>
                 ))
               ) : (
-                <option disabled>No collectors available</option>
+                <option disabled><TX>No collectors available</TX></option>
               )}
             </select>
           </div>
 
           <div className="form-group">
-            <label>Bin *</label>
+            <label><TX>Bin</TX> *</label>
             <select
               value={formData.bin_id}
               onChange={(e) => setFormData({ ...formData, bin_id: e.target.value })}
               required
             >
-              <option value="">Select a bin</option>
+              <option value=""><TX>Select a bin</TX></option>
               {bins.length > 0 ? (
                 bins.map((bin) => (
                   <option key={bin.id} value={bin.id}>
@@ -116,20 +117,21 @@ function AdminPanel() {
                   </option>
                 ))
               ) : (
-                <option disabled>No bins available</option>
+                <option disabled><TX>No bins available</TX></option>
               )}
             </select>
           </div>
 
           <button type="submit" className="btn btn-primary">
-            Assign Collection
+            <TX>Assign Collection</TX>
           </button>
+
         </form>
       </div>
 
       <div className="info-section">
-        <p>📌 Available Collectors: {collectors.length}</p>
-        <p>📦 Available Bins: {bins.length}</p>
+        <p>📌 <TX>Available Collectors</TX>: {collectors.length}</p>
+        <p>📦 <TX>Available Bins</TX>: {bins.length}</p>
       </div>
     </div>
   );

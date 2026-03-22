@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import TX from "../components/TranslatedText";
 import "./Login.css";
 
 function Login() {
@@ -30,21 +31,19 @@ function Login() {
       <div className="auth-layout">
         <section className="auth-panel auth-panel-brand">
           <span className="auth-kicker">Track Trash</span>
-          <h1>TrackTrash: Smarter tracking for cleaner cities.</h1>
-          <p>
-            Monitor bins, route collectors, and handle reports.
-          </p>
+          <h1><TX>TrackTrash: Smarter tracking for cleaner cities.</TX></h1>
+          <p><TX>Monitor bins, route collectors, and handle reports.</TX></p>
         </section>
 
         <section className="auth-panel auth-panel-form">
           <div className="auth-form-shell">
-            <span className="auth-eyebrow">Welcome back</span>
-            <h2>Sign in to your workspace</h2>
-            <p>Use your registered email and password to continue.</p>
+            <span className="auth-eyebrow"><TX>Welcome back</TX></span>
+            <h2><TX>Sign in to your workspace</TX></h2>
+            <p><TX>Use your registered email and password to continue.</TX></p>
 
             <form onSubmit={handleSubmit} className="auth-form">
               <div className="form-group">
-                <label htmlFor="email">Email address</label>
+                <label htmlFor="email"><TX>Email address</TX></label>
                 <input
                   type="email"
                   id="email"
@@ -58,7 +57,7 @@ function Login() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password"><TX>Password</TX></label>
                 <input
                   type="password"
                   id="password"
@@ -71,16 +70,18 @@ function Login() {
                 />
               </div>
 
-              {error && <div className="error-message">{error}</div>}
+              {error && (
+                <div className="error-message"><TX>{error}</TX></div>
+              )}
 
               <button type="submit" className="btn-login" disabled={loading}>
-                {loading ? "Signing in..." : "Sign in"}
+                {loading ? <TX>Signing in...</TX> : <TX>Sign in</TX>}
               </button>
             </form>
 
             <div className="auth-footer">
-              <span>New here?</span>
-              <Link to="/register">Create an account</Link>
+              <span><TX>New here?</TX></span>
+              <Link to="/register"><TX>Create an account</TX></Link>
             </div>
           </div>
         </section>

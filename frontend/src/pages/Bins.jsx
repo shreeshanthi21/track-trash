@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import api from "../services/api";
+import TX from "../components/TranslatedText";
 import "./Bins.css";
 
 function getHardwareStatus(bin) {
@@ -12,27 +13,19 @@ function getHardwareStatus(bin) {
 
 function getStatusColor(sensorStatus) {
   switch (sensorStatus) {
-    case "FULL":
-      return "full";
-    case "HALF":
-      return "half";
-    case "EMPTY":
-      return "empty";
-    default:
-      return "inactive";
+    case "FULL":    return "full";
+    case "HALF":    return "half";
+    case "EMPTY":   return "empty";
+    default:        return "inactive";
   }
 }
 
 function getStatusIcon(sensorStatus) {
   switch (sensorStatus) {
-    case "FULL":
-      return "🔴";
-    case "HALF":
-      return "🟡";
-    case "EMPTY":
-      return "⚪";
-    default:
-      return "❔";
+    case "FULL":  return "🔴";
+    case "HALF":  return "🟡";
+    case "EMPTY": return "⚪";
+    default:      return "❔";
   }
 }
 
@@ -108,7 +101,7 @@ function Bins() {
   if (loading) {
     return (
       <div className="bins-container">
-        <p>Loading bins...</p>
+        <p><TX>Loading bins...</TX></p>
       </div>
     );
   }
@@ -116,7 +109,7 @@ function Bins() {
   if (error) {
     return (
       <div className="bins-container">
-        <p className="error">{error}</p>
+        <p className="error"><TX>{error}</TX></p>
       </div>
     );
   }
@@ -124,7 +117,7 @@ function Bins() {
   if (!bins.length) {
     return (
       <div className="bins-container">
-        <p>No bins found</p>
+        <p><TX>No bins found</TX></p>
       </div>
     );
   }
@@ -132,7 +125,7 @@ function Bins() {
   return (
     <div className="bins-container">
       <div className="page-header">
-        <h1>Bin monitoring</h1>
+        <h1><TX>Bin monitoring</TX></h1>
       </div>
 
       <div className="bins-grid">
@@ -144,25 +137,27 @@ function Bins() {
               <div className="bin-card-header">
                 <div>
                   <span className="bin-id">Bin #{bin.id}</span>
-                  <p className="bin-location">{bin.location || "No location"}</p>
+                  <p className="bin-location">
+                    <TX>{bin.location || "No location"}</TX>
+                  </p>
                 </div>
                 <span className="bin-status-chip">
-                  {getStatusIcon(sensorStatus)} {sensorStatus}
+                  {getStatusIcon(sensorStatus)} <TX>{sensorStatus}</TX>
                 </span>
               </div>
 
               <div className="bin-reading-panel">
                 <div className="reading-card">
-                  <span className="reading-label">Sensor distance</span>
+                  <span className="reading-label"><TX>Sensor distance</TX></span>
                   <strong className="reading-value">
                     {bin.latest_distance_cm !== null && bin.latest_distance_cm !== undefined
                       ? `${Number(bin.latest_distance_cm).toFixed(2)} cm`
-                      : "No data"}
+                      : <TX>No data</TX>}
                   </strong>
                 </div>
 
                 <div className="reading-card">
-                  <span className="reading-label">Fill level</span>
+                  <span className="reading-label"><TX>Fill level</TX></span>
                   <strong className="reading-value">{bin.current_fill || 0}%</strong>
                 </div>
               </div>
@@ -175,8 +170,8 @@ function Bins() {
 
               <div className="bin-details">
                 <div className="detail-item">
-                  <span className="detail-label">State</span>
-                  <span className="detail-value">{sensorStatus}</span>
+                  <span className="detail-label"><TX>State</TX></span>
+                  <span className="detail-value"><TX>{sensorStatus}</TX></span>
                 </div>
               </div>
 
@@ -192,17 +187,17 @@ function Bins() {
                       placeholder="Enter fill %"
                       className="fill-input"
                     />
-                    <button className="btn-small btn-primary" onClick={() => handleUpdateFill(bin.id)}>
-                      Save
+                    <button
+                      className="btn-small btn-primary"
+                      onClick={() => handleUpdateFill(bin.id)}
+                    >
+                      <TX>Save</TX>
                     </button>
                     <button
                       className="btn-small btn-secondary"
-                      onClick={() => {
-                        setEditingId(null);
-                        setEditFill("");
-                      }}
+                      onClick={() => { setEditingId(null); setEditFill(""); }}
                     >
-                      Cancel
+                      <TX>Cancel</TX>
                     </button>
                   </div>
                 ) : (
@@ -213,7 +208,7 @@ function Bins() {
                       setEditFill(bin.current_fill || "0");
                     }}
                   >
-                    Manual update
+                    <TX>Manual update</TX>
                   </button>
                 )}
               </div>

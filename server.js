@@ -19,8 +19,9 @@ const mapIssueRoutes = require("./routes/mapIssueRoutes");
 const predictionRoutes = require("./routes/predictionRoutes");
 const routeRoutes = require("./routes/routeRoutes");
 const { persistSensorReading } = require("./controllers/sensorController");
-
+const translateRoutes = require("./routes/translateRoutes");
 const app = express();
+app.use("/api/translate", translateRoutes);
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: { origin: "*" },

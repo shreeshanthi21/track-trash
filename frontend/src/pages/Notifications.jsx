@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import TX from "../components/TranslatedText";
 import "./Notifications.css";
 
 function Notifications() {
@@ -47,46 +48,42 @@ function Notifications() {
 
   const getNotificationIcon = (type) => {
     switch (type?.toLowerCase()) {
-      case "collection":
-        return "🚚";
-      case "alert":
-        return "⚠️";
-      case "issue":
-        return "🛠️";
-      default:
-        return "📢";
+      case "collection": return "🚚";
+      case "alert":      return "⚠️";
+      case "issue":      return "🛠️";
+      default:           return "📢";
     }
   };
 
-  const filteredNotifications = notifications.filter((notification) => {
-    if (filter === "unread") {
-      return !notification.is_read;
-    }
-    if (filter === "read") {
-      return notification.is_read;
-    }
+  const filteredNotifications = notifications.filter((n) => {
+    if (filter === "unread") return !n.is_read;
+    if (filter === "read")   return n.is_read;
     return true;
   });
 
-  const unreadCount = notifications.filter((notification) => !notification.is_read).length;
+  const unreadCount = notifications.filter((n) => !n.is_read).length;
 
   const markAllVisibleAsRead = async () => {
     await Promise.all(
       filteredNotifications
-        .filter((notification) => !notification.is_read)
-        .map((notification) => markAsRead(notification.id))
+        .filter((n) => !n.is_read)
+        .map((n) => markAsRead(n.id))
     );
   };
 
   if (loading) {
-    return <div className="notifications-container"><p>Loading notifications...</p></div>;
+    return (
+      <div className="notifications-container">
+        <p><TX>Loading notifications...</TX></p>
+      </div>
+    );
   }
 
   return (
     <div className="notifications-container">
       <div className="page-header">
-        <h1>Notifications</h1>
-        <p>Review assignments, alerts, and system updates in one place.</p>
+        <h1><TX>Notifications</TX></h1>
+        <p><TX>Review assignments, alerts, and system updates in one place.</TX></p>
       </div>
 
       <div className="notifications-toolbar">
@@ -95,34 +92,38 @@ function Notifications() {
             className={`filter-btn ${filter === "all" ? "active" : ""}`}
             onClick={() => setFilter("all")}
           >
-            All ({notifications.length})
+            <TX>All</TX> ({notifications.length})
           </button>
           <button
             className={`filter-btn ${filter === "unread" ? "active" : ""}`}
             onClick={() => setFilter("unread")}
           >
-            Unread ({unreadCount})
+            <TX>Unread</TX> ({unreadCount})
           </button>
           <button
             className={`filter-btn ${filter === "read" ? "active" : ""}`}
             onClick={() => setFilter("read")}
           >
-            Read ({notifications.length - unreadCount})
+            <TX>Read</TX> ({notifications.length - unreadCount})
           </button>
         </div>
 
-        {filteredNotifications.some((notification) => !notification.is_read) && (
+        {filteredNotifications.some((n) => !n.is_read) && (
           <button className="btn-small btn-secondary" onClick={markAllVisibleAsRead}>
-            Mark visible as read
+            <TX>Mark visible as read</TX>
           </button>
         )}
       </div>
 
-      {error && <p className="error">{error}</p>}
+      {error && <p className="error"><TX>{error}</TX></p>}
 
       {filteredNotifications.length === 0 ? (
         <div className="empty-state">
-          <p>{filter === "unread" ? "No unread notifications." : "All caught up."}</p>
+          <p>
+            {filter === "unread"
+              ? <TX>No unread notifications.</TX>
+              : <TX>All caught up.</TX>}
+          </p>
         </div>
       ) : (
         <div className="notifications-list">
@@ -132,10 +133,14 @@ function Notifications() {
               className={`notification-item ${!notification.is_read ? "unread" : ""}`}
             >
               <div className="notification-content">
-                <span className="notification-icon">{getNotificationIcon(notification.type)}</span>
+                <span className="notification-icon">
+                  {getNotificationIcon(notification.type)}
+                </span>
                 <div className="notification-text">
-                  <h4>{notification.title || "Notification"}</h4>
-                  <p className="notification-desc">{notification.message}</p>
+                  <h4><TX>{notification.title || "Notification"}</TX></h4>
+                  <p className="notification-desc">
+                    <TX>{notification.message}</TX>
+                  </p>
                   <span className="notification-time">
                     {notification.created_at
                       ? new Date(notification.created_at).toLocaleString()
