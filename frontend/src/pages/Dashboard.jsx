@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import api from "../services/api";
+import TX from "../components/TranslatedText";
 import "./Dashboard.css";
 
 function Dashboard() {
@@ -46,24 +47,28 @@ function Dashboard() {
 
   const quickLinks = isCollector
     ? [
-        { to: "/bins", label: "View bin status" },
+        { to: "/bins",        label: "View bin status" },
         { to: "/collections", label: "Open collection jobs" },
-        { to: "/map", label: "Assigned map issues" },
+        { to: "/map",         label: "Assigned map issues" },
       ]
     : isAdmin
       ? [
-          { to: "/bins", label: "Manage bins" },
-          { to: "/collections", label: "Schedule collections" },
+          { to: "/bins",          label: "Manage bins" },
+          { to: "/collections",   label: "Schedule collections" },
           { to: "/notifications", label: "Review notifications" },
         ]
       : [
-          { to: "/bins", label: "Check nearby bins" },
+          { to: "/bins",   label: "Check nearby bins" },
           { to: "/issues", label: "Report an issue" },
-          { to: "/map", label: "Pin a location on the map" },
+          { to: "/map",    label: "Pin a location on the map" },
         ];
 
   if (loading) {
-    return <div className="dashboard-container"><p>Loading dashboard...</p></div>;
+    return (
+      <div className="dashboard-container">
+        <p><TX>Loading dashboard...</TX></p>
+      </div>
+    );
   }
 
   return (
@@ -72,17 +77,36 @@ function Dashboard() {
         <div className="dashboard-hero-copy">
           <div className="dashboard-hero-inner">
             <h1>
-              {isAdmin && "Track live bin levels, overflow alerts, and field response."}
-              {isCollector && "Check live bin readings and move through assigned pickup work."}
-              {!isAdmin && !isCollector && "Monitor smart bins, report issues, and follow cleanup updates."}
+              {isAdmin && (
+                <TX>Track live bin levels, overflow alerts, and field response.</TX>
+              )}
+              {isCollector && (
+                <TX>Check live bin readings and move through assigned pickup work.</TX>
+              )}
+              {!isAdmin && !isCollector && (
+                <TX>Monitor smart bins, report issues, and follow cleanup updates.</TX>
+              )}
             </h1>
             <p>
-              {isAdmin &&
-                "The ultrasonic bin monitor updates the system with FULL, HALF, and EMPTY readings so collection teams can act before overflow spreads."}
-              {isCollector &&
-                "Distance readings from the ultrasonic sensor mark bins as FULL, HALF, or EMPTY to help you prioritize the next collection stop."}
-              {!isAdmin &&
-                "Smart bins report live fill conditions using ultrasonic distance readings, so you can quickly see when a location needs attention."}
+              {isAdmin && (
+                <TX>
+                  The ultrasonic bin monitor updates the system with FULL, HALF,
+                  and EMPTY readings so collection teams can act before overflow
+                  spreads.
+                </TX>
+              )}
+              {isCollector && (
+                <TX>
+                  Distance readings from the ultrasonic sensor mark bins as FULL,
+                  HALF, or EMPTY to help you prioritize the next collection stop.
+                </TX>
+              )}
+              {!isAdmin && !isCollector && (
+                <TX>
+                  Smart bins report live fill conditions using ultrasonic distance
+                  readings, so you can quickly see when a location needs attention.
+                </TX>
+              )}
             </p>
           </div>
         </div>
@@ -91,7 +115,7 @@ function Dashboard() {
           <div className="quick-links">
             {quickLinks.map((link) => (
               <Link key={link.to} to={link.to} className="btn btn-primary">
-                {link.label}
+                <TX>{link.label}</TX>
               </Link>
             ))}
           </div>
@@ -103,7 +127,7 @@ function Dashboard() {
           <div className="stat-card total">
             <div className="stat-icon">🗑️</div>
             <div className="stat-content">
-              <h3>Total bins</h3>
+              <h3><TX>Total bins</TX></h3>
               <p className="stat-number">{stats.total}</p>
             </div>
           </div>
@@ -111,7 +135,7 @@ function Dashboard() {
           <div className="stat-card full">
             <div className="stat-icon">🔴</div>
             <div className="stat-content">
-              <h3>Full bins</h3>
+              <h3><TX>Full bins</TX></h3>
               <p className="stat-number">{stats.full}</p>
             </div>
           </div>
@@ -119,7 +143,7 @@ function Dashboard() {
           <div className="stat-card active">
             <div className="stat-icon">🟡</div>
             <div className="stat-content">
-              <h3>Half bins</h3>
+              <h3><TX>Half bins</TX></h3>
               <p className="stat-number">{stats.half}</p>
             </div>
           </div>
@@ -127,7 +151,7 @@ function Dashboard() {
           <div className="stat-card empty">
             <div className="stat-icon">⚪</div>
             <div className="stat-content">
-              <h3>Empty bins</h3>
+              <h3><TX>Empty bins</TX></h3>
               <p className="stat-number">{stats.empty}</p>
             </div>
           </div>

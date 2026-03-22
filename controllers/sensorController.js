@@ -1,7 +1,7 @@
 const db = require("../config/db");
 
 function normalizeFromDistance(distanceCm) {
-  const MAX_HEIGHT = 40; // adjust to your bin height
+  const MAX_HEIGHT = 25; // adjust to your bin height
 
   let fill = ((MAX_HEIGHT - distanceCm) / MAX_HEIGHT) * 100;
 

@@ -1,6 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 import "./Navbar.css";
 
 function Navbar() {
@@ -84,6 +85,8 @@ function Navbar() {
           </nav>
 
           <div className="nav-user">
+            <LanguageSwitcher />
+
             <div className="user-chip">
               <span className="user-avatar" aria-hidden="true">
                 👤

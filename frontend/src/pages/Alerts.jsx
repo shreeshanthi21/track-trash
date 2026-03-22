@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import TX from "../components/TranslatedText";
 import "./Alerts.css";
 
 function getSeverityFromAlert(alert) {
-  if (alert.alert_type === "OVERFLOW") {
-    return "critical";
-  }
-  if (alert.alert_type === "USER_ALERT") {
-    return "warning";
-  }
+  if (alert.alert_type === "OVERFLOW") return "critical";
+  if (alert.alert_type === "USER_ALERT") return "warning";
   return "info";
 }
 
@@ -19,10 +16,7 @@ function Alerts() {
   const [error, setError] = useState("");
   const [userRole, setUserRole] = useState("user");
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    bin_id: "",
-    message: "",
-  });
+  const [formData, setFormData] = useState({ bin_id: "", message: "" });
   const [formMessage, setFormMessage] = useState("");
 
   useEffect(() => {
@@ -85,17 +79,23 @@ function Alerts() {
   };
 
   if (loading) {
-    return <div className="alerts-container"><p>Loading alerts...</p></div>;
+    return (
+      <div className="alerts-container">
+        <p><TX>Loading alerts...</TX></p>
+      </div>
+    );
   }
 
   return (
     <div className="alerts-container">
       <div className="page-header">
-        <h1>Alerts</h1>
+        <h1><TX>Alerts</TX></h1>
         <p>
-          {userRole === "admin"
-            ? "Monitor every alert generated across the system."
-            : "Send manual alerts and review the ones you have submitted."}
+          {userRole === "admin" ? (
+            <TX>Monitor every alert generated across the system.</TX>
+          ) : (
+            <TX>Send manual alerts and review the ones you have submitted.</TX>
+          )}
         </p>
       </div>
 
@@ -103,7 +103,7 @@ function Alerts() {
         <div className="alert-creation-section">
           {!showForm ? (
             <button className="btn btn-primary" onClick={() => setShowForm(true)}>
-              Send a new alert
+              <TX>Send a new alert</TX>
             </button>
           ) : (
             <form className="alert-form" onSubmit={handleSubmitAlert}>
@@ -115,12 +115,12 @@ function Alerts() {
                       : "error-message"
                   }
                 >
-                  {formMessage}
+                  <TX>{formMessage}</TX>
                 </div>
               )}
 
               <div className="form-group">
-                <label htmlFor="alert-bin">Bin</label>
+                <label htmlFor="alert-bin"><TX>Bin</TX></label>
                 <select
                   id="alert-bin"
                   value={formData.bin_id}
@@ -129,7 +129,7 @@ function Alerts() {
                   }
                   required
                 >
-                  <option value="">Select a bin</option>
+                  <option value=""><TX>Select a bin</TX></option>
                   {bins.map((bin) => (
                     <option key={bin.id} value={bin.id}>
                       Bin #{bin.id} - {bin.location || "No location"}
@@ -139,7 +139,7 @@ function Alerts() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="alert-message">Alert message</label>
+                <label htmlFor="alert-message"><TX>Alert message</TX></label>
                 <input
                   id="alert-message"
                   type="text"
@@ -154,17 +154,14 @@ function Alerts() {
 
               <div className="form-buttons">
                 <button type="submit" className="btn btn-primary">
-                  Send alert
+                  <TX>Send alert</TX>
                 </button>
                 <button
                   type="button"
                   className="btn btn-secondary"
-                  onClick={() => {
-                    setShowForm(false);
-                    setFormMessage("");
-                  }}
+                  onClick={() => { setShowForm(false); setFormMessage(""); }}
                 >
-                  Cancel
+                  <TX>Cancel</TX>
                 </button>
               </div>
             </form>
@@ -172,17 +169,22 @@ function Alerts() {
         </div>
       )}
 
-      {error && <p className="error">{error}</p>}
+      {error && <p className="error"><TX>{error}</TX></p>}
 
       {alerts.length === 0 ? (
         <div className="empty-state">
-          <p>{userRole === "admin" ? "No alerts in the system." : "You have not sent any alerts yet."}</p>
+          <p>
+            {userRole === "admin" ? (
+              <TX>No alerts in the system.</TX>
+            ) : (
+              <TX>You have not sent any alerts yet.</TX>
+            )}
+          </p>
         </div>
       ) : (
         <div className="alerts-list">
           {alerts.map((alert) => {
             const severity = getSeverityFromAlert(alert);
-
             return (
               <div key={alert.id} className={`alert-item ${severity}`}>
                 <div className="alert-header">
@@ -190,14 +192,14 @@ function Alerts() {
                     {severity === "critical" ? "🔴" : severity === "warning" ? "🟠" : "🔵"}
                   </span>
                   <div className="alert-title-section">
-                    <h3>{alert.message || "Alert"}</h3>
+                    <h3><TX>{alert.message || "Alert"}</TX></h3>
                     <p className="alert-bin">Bin #{alert.bin_id || "N/A"}</p>
                   </div>
-                  <span className="alert-severity">{severity}</span>
+                  <span className="alert-severity"><TX>{severity}</TX></span>
                 </div>
 
                 <div className="alert-body">
-                  <p>{alert.alert_type || "System alert"}</p>
+                  <p><TX>{alert.alert_type || "System alert"}</TX></p>
                 </div>
 
                 <div className="alert-footer">
@@ -207,7 +209,7 @@ function Alerts() {
                       : "Unknown time"}
                   </span>
                   <span className={`status-badge ${alert.status?.toLowerCase() || "open"}`}>
-                    {alert.status || "active"}
+                    <TX>{alert.status || "active"}</TX>
                   </span>
                 </div>
               </div>
