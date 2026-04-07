@@ -10,7 +10,7 @@ classes = ['cardboard','glass','metal','paper','plastic','trash']
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = models.mobilenet_v2(pretrained=False)
 model.classifier[1] = nn.Linear(model.last_channel, 6)
-model.load_state_dict(torch.load("model/saved_model.pth", map_location=device))
+model.load_state_dict(torch.load("model/saved_model1.pth", map_location=device))
 model.to(device)
 model.eval()
 
