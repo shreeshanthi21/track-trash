@@ -31,7 +31,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
-    const response = await fetch("/api/auth/login", {
+    const response = await fetch("https://track-trash.onrender.com/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
