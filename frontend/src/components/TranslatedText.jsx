@@ -1,35 +1,39 @@
-// src/components/TranslatedText.jsx
 import { useState, useEffect } from "react";
 import { useLang } from "../i18n/LangContext";
 import { translateText } from "../services/translateService";
 
 export default function TX({ children }) {
   const { lang } = useLang();
-  const original = String(children ?? "");
+  const original = String(children ?? "").trim();
   const [output, setOutput] = useState(original);
 
-  useEffect(() => {
-    // Reset to original immediately when lang changes
+  // Synchronize state instantly if language is toggled back to English
+  if (lang === "en" && output !== original) {
     setOutput(original);
+  }
 
-    if (lang === "en" || !original.trim()) {
+  useEffect(() => {
+    if (lang === "en" || !original) {
+      setOutput(original);
       return;
     }
 
-    let cancelled = false;
+    let isMounted = true;
 
     translateText(original, lang)
       .then((translated) => {
-        if (!cancelled) setOutput(translated);
+        if (isMounted && translated) {
+          setOutput(translated);
+        }
       })
       .catch(() => {
-        if (!cancelled) setOutput(original);
+        if (isMounted) setOutput(original);
       });
 
     return () => {
-      cancelled = true;
+      isMounted = false;
     };
-  }, [lang, original]); // ← both lang AND original in dependency array
+  }, [lang, original]); // Triggers translation accurately whenever language or string shifts
 
-  return output;
+  return <>{output}</>;
 }
