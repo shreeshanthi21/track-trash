@@ -5,6 +5,6 @@ const { verifyToken } = require("../middleware/authMiddleware");
 const { translate } = require("../controllers/translateController");
 
 // POST /api/translate
-router.post("/", translate);
+router.post("/", verifyToken, translate);
 
 module.exports = router;
