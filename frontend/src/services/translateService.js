@@ -26,7 +26,7 @@ export async function translateTexts(texts, targetLang) {
     console.log("Calling /api/translate for:", needed.map(n => n.text), "->", targetLang);
 
     try {
-      const res = await fetch("https://track-trash.onrender.com/api/translate", {
+      const response = await fetch("https://track-trash.onrender.com/api/translate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
