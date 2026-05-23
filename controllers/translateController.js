@@ -15,14 +15,15 @@ const LANG_MAP = {
   en: "en",
 };
 
-// ── Call MyMemory API ─────────────────────────────────────
+// ── Call Free Cloud-Friendly MyMemory API ─────────────────────────────────────
 function myMemoryTranslate(text, target) {
   return new Promise((resolve) => {
     const encoded = encodeURIComponent(text);
-    const path = `/translate_a/single?client=gtx&sl=en&tl=${target}&dt=t&q=${encoded}`;
+    // Using the official MyMemory translation API endpoint
+    const path = `/get?q=${encoded}&langpair=en|${target}`;
 
     const options = {
-      hostname: "translate.googleapis.com",
+      hostname: "api.mymemory.translated.net",
       path,
       method: "GET",
     };
@@ -33,10 +34,8 @@ function myMemoryTranslate(text, target) {
       res.on("end", () => {
         try {
           const parsed = JSON.parse(data);
-          // Response is nested arrays: [[["translatedText","original",...],...],...]
-          const translated = parsed[0]
-            .map((segment) => segment[0])
-            .join("");
+          // MyMemory returns data inside responseData.translatedText
+          const translated = parsed.responseData?.translatedText;
           resolve(translated || text);
         } catch {
           resolve(text);
@@ -90,7 +89,20 @@ function storeCache(text, target, translated) {
 exports.translate = async (req, res) => {
   console.log("CONTENT-TYPE:", req.headers["content-type"]);
   console.log("BODY:", req.body);
-  const { texts, target } = req.body || {};
+
+  // 🛠️ Safe parsing fallback block added here:
+  let body = req.body;
+  if (!body || Object.keys(body).length === 0) {
+    try {
+      if (req.rawBody) {
+        body = JSON.parse(req.rawBody);
+      }
+    } catch (e) {
+      console.warn("Failed to parse raw body fallback:", e.message);
+    }
+  }
+
+  const { texts, target } = body || {};
 
   if (!texts || !Array.isArray(texts) || texts.length === 0) {
     return res.status(400).json({ message: "texts array is required" });

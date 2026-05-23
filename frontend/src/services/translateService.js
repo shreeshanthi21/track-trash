@@ -1,4 +1,3 @@
-// src/services/translateService.js
 const memCache = {};
 
 function cacheKey(text, lang) {
@@ -23,8 +22,6 @@ export async function translateTexts(texts, targetLang) {
   if (needed.length > 0) {
     const token = localStorage.getItem("token");
 
-    console.log("Calling /api/translate for:", needed.map(n => n.text), "->", targetLang);
-
     try {
       const response = await fetch("https://track-trash.onrender.com/api/translate", {
         method: "POST",
@@ -41,7 +38,6 @@ export async function translateTexts(texts, targetLang) {
       const data = await response.json();
       console.log("Translation response:", data);
 
-      // 🛠️ Check if the incoming data is an array or a single raw string before looping
       let finalTranslations = [];
       if (data && data.translations) {
         finalTranslations = Array.isArray(data.translations) 
