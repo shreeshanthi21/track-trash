@@ -41,10 +41,20 @@ export async function translateTexts(texts, targetLang) {
       const data = await response.json();
       console.log("Translation response:", data);
 
-      data.translations.forEach((translated, j) => {
-        const { i, text } = needed[j];
-        results[i] = translated;
-        memCache[cacheKey(text, targetLang)] = translated;
+      // 🛠️ Check if the incoming data is an array or a single raw string before looping
+      let finalTranslations = [];
+      if (data && data.translations) {
+        finalTranslations = Array.isArray(data.translations) 
+          ? data.translations 
+          : [data.translations];
+      }
+
+      finalTranslations.forEach((translated, j) => {
+        if (needed[j]) {
+          const { i, text } = needed[j];
+          results[i] = translated || text;
+          memCache[cacheKey(text, targetLang)] = translated || text;
+        }
       });
     } catch (err) {
       console.error("Translation failed:", err);
