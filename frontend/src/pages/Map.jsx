@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import TX from "../components/TranslatedText";
+import api from "../services/api"; // 👈 Connects the page to your live Render base URL
 
 const redIcon = new L.Icon({
   iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
@@ -49,13 +50,13 @@ function MapPage() {
 
   const fetchMapIssues = async () => {
     try {
-      let url = "/api/map-issues";
-      if (userRole === "user")      url = "/api/map-issues/my";
-      else if (userRole === "collector") url = "/api/map-issues/collector";
+      let url = "/map-issues"; // 👈 Removed /api
+      if (userRole === "user")       url = "/map-issues/my";
+      if (userRole === "collector")  url = "/map-issues/collector";
 
-      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-      const data = await res.json();
-      if (!res.ok) { console.error(data.message || "Failed to fetch map issues"); return; }
+      // Swap fetch for api.get
+      const res = await api.get(url, { headers: { Authorization: `Bearer ${token}` } });
+      const data = res.data; // Axios puts data directly inside res.data (no await res.json() needed!)
 
       const cleanedIssues = (Array.isArray(data) ? data : []).filter(
         (issue) =>
@@ -100,10 +101,8 @@ function MapPage() {
 
   const fetchCollectors = async () => {
     try {
-      const res = await fetch("/api/users/collectors", { headers: { Authorization: `Bearer ${token}` } });
-      const data = await res.json();
-      if (!res.ok) { console.error(data.message || "Failed to fetch collectors"); return; }
-      setCollectors(Array.isArray(data) ? data : []);
+      const res = await api.get("/users/collectors", { headers: { Authorization: `Bearer ${token}` } });
+      setCollectors(Array.isArray(res.data) ? res.data : []);
     } catch (err) { console.error("Error fetching collectors:", err); }
   };
 
@@ -248,7 +247,7 @@ function MapPage() {
       return;
     }
     try {
-      const res = await fetch("/api/map-issues", {
+      const res = await fetch("https://track-trash.onrender.com/api/map-issues", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ description, latitude: selectedLocation.lat, longitude: selectedLocation.lng }),
@@ -264,10 +263,8 @@ function MapPage() {
 
   const handleAssignCollector = async (issueId, collectorId) => {
     try {
-      await fetch(`/api/map-issues/assign/${issueId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ assigned_collector_id: collectorId }),
+      await api.put(`/map-issues/assign/${issueId}`, { assigned_collector_id: collectorId }, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       fetchMapIssues();
     } catch (err) { console.error(err); }
@@ -275,10 +272,8 @@ function MapPage() {
 
   const handleMarkDone = async (issueId) => {
     try {
-      await fetch(`/api/map-issues/status/${issueId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ status: "done" }),
+      await api.put(`/map-issues/status/${issueId}`, { status: "done" }, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       fetchMapIssues();
     } catch (err) { console.error(err); }
