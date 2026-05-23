@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://track-trash.onrender.com"
+  baseURL: "https://track-trash.onrender.com/api/"
 });
 
 // Add token to every request if it exists
