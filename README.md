@@ -1,4 +1,3 @@
-```markdown
 # Track Trash: Smart Waste Management Operations System
 
 Track Trash is a full-stack, cloud-native operational ecosystem designed to optimize urban waste collection. It bridges IoT-simulated hardware telemetry with automated administrative dispatch and field operations. The application segments functionalities across three distinct user roles (Citizen, Waste Collector, and Administrator) to coordinate real-time cleanup operations.
@@ -7,41 +6,38 @@ Live Production URL: [https://track-trash.vercel.app](https://track-trash.vercel
 
 ---
 
-## System Architecture & Data Flow
+## 🏗️ System Architecture & Data Flow
 
 The application decouples user complaints, automated sensor streams, and logistics assignments into a highly scalable, distributed relational infrastructure.
 
-
-```
-
+```text
 +-----------------------------------------------------------------+
 |                      Vercel React Frontend                      |
 +-----------------------------------------------------------------+
-|                          |                          |
-| (Citizen User)           | (Waste Collector)        | (System Admin)
-v                          v                          v
+         |                          |                          |
+         | (Citizen User)           | (Waste Collector)        | (System Admin)
+         v                          v                          v
 +------------------+       +------------------+       +------------------+
 | - Raise Map Pins |       | - Real-Time OSRM |       | - Assign Bins    |
 | - Classify Waste |       |   Routing Engine |       | - Task Map Issues|
 | - Review Issues  |       | - Complete Jobs  |       | - Analytics      |
 +------------------+       +------------------+       +------------------+
-|                          |                          |
-+--------------------------+--------------------------+
-|
-v
+         |                          |                          |
+         +--------------------------+--------------------------+
+                                    |
+                                    v
 +-----------------------------------------------------------------+
 |                   Render Express Node Server                    |
 +-----------------------------------------------------------------+
-|                                                     |
-| (WebSocket Engine)                                  | (Relational Queries)
-v                                                     v
+         |                                                     |
+         | (WebSocket Engine)                                  | (Relational Queries)
+         v                                                     v
 +----------------------------------+       +----------------------------------+
 |      Live Socket.io Pipe         |       |      TiDB Cloud Serverless       |
 |      (Hardware Emulation)        |       |          (MySQL Engine)          |
 +----------------------------------+       +----------------------------------+
 
 ```
-
 ### Core Workflows:
 1. **Automated IoT Pipeline:** Ultrasonic sensors track physical waste bin depths. When filling triggers cross the target limit ($Fill \ge 80\%$), the backend dynamically creates an `OVERFLOW` system warning alert.
 2. **Citizen-Driven Map Pipeline:** Users drop geospatial vector coordinates on a map interface to isolate illicit dumping zones.
