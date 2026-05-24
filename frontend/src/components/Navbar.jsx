@@ -16,7 +16,9 @@ function Navbar() {
 
   const navItems = useMemo(() => {
     const role = user?.role || "user";
-    const items = [
+    
+    // 1️⃣ Baseline array setup
+    let items = [
       { to: "/", label: "Dashboard" },
       { to: "/bins", label: "Bins" },
       { to: "/map", label: "Map" },
@@ -25,8 +27,16 @@ function Navbar() {
       { to: "/notifications", label: "Notifications" },
     ];
 
+    // 🛠️ FIX: Filter out Alerts and Issues specifically for collectors
+    if (role === "collector") {
+      items = items.filter(item => item.to !== "/alerts" && item.to !== "/issues");
+    }
+
+    // 2️⃣ Splice in collections dynamically
     if (role === "admin" || role === "collector") {
-      items.splice(4, 0, { to: "/collections", label: "Collections" });
+      // Adjusted the slice index location because collectors have fewer items now
+      const insertIndex = role === "collector" ? 3 : 4;
+      items.splice(insertIndex, 0, { to: "/collections", label: "Collections" });
     }
 
     items.push({ to: "/classify", label: "Classify" });
