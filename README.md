@@ -27,7 +27,7 @@ cd frontend
 npm install  
 npm run dev  
 
-Frontend runs on: https://track-trash.onrender.com
+Backend runs on: https://track-trash.onrender.com
 
 5. Expose the frontend
 
