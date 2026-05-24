@@ -14,7 +14,7 @@ function Navbar() {
     setMenuOpen(false);
   }, [location.pathname]);
 
-  const navItems = useMemo(() => {
+const navItems = useMemo(() => {
     const role = user?.role || "user";
     
     // 1️⃣ Baseline array setup
@@ -27,20 +27,23 @@ function Navbar() {
       { to: "/notifications", label: "Notifications" },
     ];
 
-    // 🛠️ FIX: Filter out Alerts and Issues specifically for collectors
+    // 🛠️ FILTER A: Remove Alerts and Issues for Collectors
     if (role === "collector") {
       items = items.filter(item => item.to !== "/alerts" && item.to !== "/issues");
     }
 
-    // 2️⃣ Splice in collections dynamically
+    // 🛠️ FILTER B: Splice in Collections dynamically for Admins & Collectors
     if (role === "admin" || role === "collector") {
-      // Adjusted the slice index location because collectors have fewer items now
       const insertIndex = role === "collector" ? 3 : 4;
       items.splice(insertIndex, 0, { to: "/collections", label: "Collections" });
     }
 
-    items.push({ to: "/classify", label: "Classify" });
+    // 🛠️ FILTER C: Only give the ML Classify tool to standard Citizen Users
+    if (role !== "admin" && role !== "collector") {
+      items.push({ to: "/classify", label: "Classify" });
+    }
 
+    // 🛠️ FILTER D: Keep Admin Control Panel strictly for Admins
     if (role === "admin") {
       items.push({ to: "/admin", label: "Admin", admin: true });
     }
