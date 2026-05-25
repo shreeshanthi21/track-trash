@@ -228,5 +228,4 @@ npm run dev
 | **System Settings** | Standard User State | Standard Collector State | Direct Field Pairing Control |
 
 ```
-
 ```
