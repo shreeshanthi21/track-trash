@@ -6,7 +6,7 @@ Live Production URL: [https://track-trash.vercel.app](https://track-trash.vercel
 
 ---
 
-## 🏗️ System Architecture & Data Flow
+##  System Architecture & Data Flow
 
 The application decouples user complaints, automated sensor streams, and logistics assignments into a highly scalable, distributed relational infrastructure.
 
