@@ -3,6 +3,7 @@
 Track Trash is a full-stack, cloud-native operational ecosystem designed to optimize urban waste collection. It bridges IoT-simulated hardware telemetry with automated administrative dispatch and field operations. The application segments functionalities across three distinct user roles (Citizen, Waste Collector, and Administrator) to coordinate real-time cleanup operations.
 
 Live Production URL: [https://track-trash.vercel.app](https://track-trash.vercel.app)
+Screenshots of the site are attached below.
 
 ---
 
