@@ -4,7 +4,7 @@ Track Trash is a full-stack, cloud-native operational ecosystem designed to opti
 
 Live Production URL: [https://track-trash.vercel.app](https://track-trash.vercel.app)
 
-Screenshots of the site are attached below.
+Screenshots of the site are attached in the end.
 
 ---
 
